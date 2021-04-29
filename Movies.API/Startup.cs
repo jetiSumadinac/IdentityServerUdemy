@@ -47,6 +47,10 @@ namespace Movies.API
                         ValidateAudience = false
                     };
                 });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ClientIdPolicy", policy => policy.RequireClaim("client_id", "movieClient"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,8 +67,8 @@ namespace Movies.API
 
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
