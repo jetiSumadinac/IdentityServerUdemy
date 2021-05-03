@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.6.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.API", "Movies.API\Movies.API.csproj", "{DB918998-9373-4535-BEF8-78822BAF8D3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Movies.API", "Movies.API\Movies.API.csproj", "{DB918998-9373-4535-BEF8-78822BAF8D3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{67EB03AB-CA72-4E93-B681-D3B557FE038F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{67EB03AB-CA72-4E93-B681-D3B557FE038F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Client", "Movies.Client\Movies.Client.csproj", "{B529B3FC-4B58-4702-B640-1524A23154B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,18 @@ Global
 		{67EB03AB-CA72-4E93-B681-D3B557FE038F}.Release|x64.Build.0 = Release|Any CPU
 		{67EB03AB-CA72-4E93-B681-D3B557FE038F}.Release|x86.ActiveCfg = Release|Any CPU
 		{67EB03AB-CA72-4E93-B681-D3B557FE038F}.Release|x86.Build.0 = Release|Any CPU
+		{B529B3FC-4B58-4702-B640-1524A23154B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B529B3FC-4B58-4702-B640-1524A23154B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B529B3FC-4B58-4702-B640-1524A23154B4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B529B3FC-4B58-4702-B640-1524A23154B4}.Debug|x64.Build.0 = Debug|Any CPU
+		{B529B3FC-4B58-4702-B640-1524A23154B4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B529B3FC-4B58-4702-B640-1524A23154B4}.Debug|x86.Build.0 = Debug|Any CPU
+		{B529B3FC-4B58-4702-B640-1524A23154B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B529B3FC-4B58-4702-B640-1524A23154B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B529B3FC-4B58-4702-B640-1524A23154B4}.Release|x64.ActiveCfg = Release|Any CPU
+		{B529B3FC-4B58-4702-B640-1524A23154B4}.Release|x64.Build.0 = Release|Any CPU
+		{B529B3FC-4B58-4702-B640-1524A23154B4}.Release|x86.ActiveCfg = Release|Any CPU
+		{B529B3FC-4B58-4702-B640-1524A23154B4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
