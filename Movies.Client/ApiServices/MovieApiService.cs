@@ -32,7 +32,7 @@ namespace Movies.Client.ApiServices
                 {
                     Id = 1,
                     Genre = "Comics",
-                    Title = "",
+                    Title = "asd",
                     Rating = "9,2",
                     ImageUrl = "images/src",
                     ReleaseDate = DateTime.Now,
