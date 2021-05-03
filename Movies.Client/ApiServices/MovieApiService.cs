@@ -1,7 +1,10 @@
-﻿using Movies.Client.Models;
+﻿using IdentityModel.Client;
+using Movies.Client.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Movies.Client.ApiServices
@@ -26,21 +29,60 @@ namespace Movies.Client.ApiServices
 
         public async Task<IEnumerable<Movie>> GetMovies()
         {
-            var movieList = new List<Movie>();
-            movieList.Add(
-                new Movie
-                {
-                    Id = 1,
-                    Genre = "Comics",
-                    Title = "asd",
-                    Rating = "9,2",
-                    ImageUrl = "images/src",
-                    ReleaseDate = DateTime.Now,
-                    Owner = "swn"
-                }
-            );
+            // 1 - Get token from Identity server
+            // 2 - send reguest to protected API
+            // 3 - Deserialize object to MovieList
 
-            return await Task.FromResult(movieList);
+            //1 . "retrieve" our API credentials.  this must be registered on identity server
+            var apiCredentials = new ClientCredentialsTokenRequest
+            {
+                Address = "Https://localhost:44380/connect/token",
+                ClientId = "movieClient",
+                ClientSecret = "secret",
+
+                ////this is the scope our API requires
+                Scope = "movieApi",
+            };
+
+            var client = new HttpClient();
+            var disco = await client.GetDiscoveryDocumentAsync("https://localhost:44380");
+            if (disco.IsError)
+                return null;
+
+            //2. authenticate and get an access token from identity server
+            var tokenResponse = await client.RequestClientCredentialsTokenAsync(apiCredentials);
+            if (tokenResponse.IsError)
+                return null;
+
+            //3. set the access_token in the request authorization : Bearer <token>
+            var apiCLient = new HttpClient();
+            apiCLient.SetBearerToken(tokenResponse.AccessToken);
+
+            //4. send request to our ProtectedAPI
+            var response = await apiCLient.GetAsync("https://localhost:44364/api/movies");
+            response.EnsureSuccessStatusCode();
+
+
+            var content = await response.Content.ReadAsStringAsync();
+            List<Movie> movieList = JsonConvert.DeserializeObject<List<Movie>>(content);
+
+            return movieList;
+
+            //var movieList = new List<Movie>();
+            //movieList.Add(
+            //    new Movie
+            //    {
+            //        Id = 1,
+            //        Genre = "Comics",
+            //        Title = "asd",
+            //        Rating = "9,2",
+            //        ImageUrl = "images/src",
+            //        ReleaseDate = DateTime.Now,
+            //        Owner = "swn"
+            //    }
+            //);
+
+            //return await Task.FromResult(movieList);
         }
 
         public Task<Movie> UpdateMovie(Movie movie)
