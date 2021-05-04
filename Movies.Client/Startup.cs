@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using Movies.Client.ApiServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Net.Http.Headers;
+using Movies.Client.HttpHandlers;
+using IdentityModel.Client;
 
 namespace Movies.Client
 {
@@ -47,7 +50,29 @@ namespace Movies.Client
 
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
-                });
+                }
+            );
+            //1. create an httpCLient
+            services.AddTransient<AuthenticationDelegatingHandler>();
+            
+            services.AddHttpClient("MovieAPIClient", client => {
+                client.BaseAddress = new Uri("https://localhost:44364");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
+            }).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
+            
+            services.AddHttpClient("IDPClient", client => {
+                client.BaseAddress = new Uri("https://localhost:44380");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add(HeaderNames.Accept, "appliecation/json");
+            });
+            
+            services.AddSingleton(new ClientCredentialsTokenRequest {
+                Address = "Https://localhost:44380/connect/token",
+                ClientId = "movieClient",
+                ClientSecret = "secret",
+                Scope = "movieApi"
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
