@@ -43,10 +43,13 @@ namespace Movies.Client
                     options.Authority = "https://localhost:44380";
                     options.ClientId = "movies_mvc_client";
                     options.ClientSecret = "secret";
-                    options.ResponseType = "code";
+                    options.ResponseType = "code id_token";
 
                     options.Scope.Add("openid");
                     options.Scope.Add("profile");
+                    options.Scope.Add("movieApi");
+                    options.Scope.Add("address");
+                    options.Scope.Add("email");
 
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
@@ -66,13 +69,15 @@ namespace Movies.Client
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "appliecation/json");
             });
-            
-            services.AddSingleton(new ClientCredentialsTokenRequest {
-                Address = "Https://localhost:44380/connect/token",
-                ClientId = "movieClient",
-                ClientSecret = "secret",
-                Scope = "movieApi"
-            });
+
+            services.AddHttpContextAccessor();
+
+            //services.AddSingleton(new ClientCredentialsTokenRequest {
+            //    Address = "Https://localhost:44380/connect/token",
+            //    ClientId = "movieClient",
+            //    ClientSecret = "secret",
+            //    Scope = "movieApi"
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

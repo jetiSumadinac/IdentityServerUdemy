@@ -29,6 +29,7 @@ namespace Movies.Client.Controllers
         public async Task<IActionResult> Index()
         {
             LogTokenClaims();
+            var rrr = User.Claims;
             return View(await _movieApiService.GetMovies());
         }
         public async Task Logout() {
