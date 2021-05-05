@@ -39,13 +39,22 @@ namespace Movies.Client.Controllers
         private async Task LogTokenClaims()
         {
             var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
-            Debug.WriteLine($"IdentityToken: {identityToken}");
+            var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+            Debug.WriteLine($"Client~: IdentityToken: {identityToken}");
             foreach(var claim in User.Claims)
             {
-                Debug.WriteLine($"ClaimType: {claim.Type} - Claim Values: {claim.Value}");
+                Debug.WriteLine($"Client~: ClaimType: {claim.Type} - Claim Values: {claim.Value}");
             }
 
         }
+
+        [Authorize(Roles ="admin")]
+        public async Task<IActionResult> OnlyAdmin() {
+            var userInfo = await _movieApiService.GetUserInfo();
+
+            return View(userInfo);
+        }
+
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {

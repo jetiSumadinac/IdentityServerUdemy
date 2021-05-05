@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Net.Http.Headers;
 using Movies.Client.HttpHandlers;
 using IdentityModel.Client;
+using IdentityModel;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Movies.Client
 {
@@ -40,7 +42,7 @@ namespace Movies.Client
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
                 {
-                    options.Authority = "https://localhost:44380";
+                    options.Authority = "https://localhost:5005";
                     options.ClientId = "movies_mvc_client";
                     options.ClientSecret = "secret";
                     options.ResponseType = "code id_token";
@@ -50,22 +52,31 @@ namespace Movies.Client
                     options.Scope.Add("movieApi");
                     options.Scope.Add("address");
                     options.Scope.Add("email");
+                    options.Scope.Add("roles");
+
+                    options.ClaimActions.MapUniqueJsonKey("role", "role");
 
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
+
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        NameClaimType = JwtClaimTypes.GivenName,
+                        RoleClaimType = JwtClaimTypes.Role
+                    };
                 }
             );
             //1. create an httpCLient
             services.AddTransient<AuthenticationDelegatingHandler>();
             
             services.AddHttpClient("MovieAPIClient", client => {
-                client.BaseAddress = new Uri("https://localhost:44364");
+                client.BaseAddress = new Uri("https://localhost:5001");
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             }).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
             
             services.AddHttpClient("IDPClient", client => {
-                client.BaseAddress = new Uri("https://localhost:44380");
+                client.BaseAddress = new Uri("https://localhost:5005");
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "appliecation/json");
             });

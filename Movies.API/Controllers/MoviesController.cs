@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Movies.API.Data;
 using Movies.API.Model;
 
@@ -28,7 +31,18 @@ namespace Movies.API.Controllers
         public async Task<ActionResult<IEnumerable<Movie>>> GetMovie()
         {
             var rrr = User.Claims;
+            await LogTokenAndClaims();
             return await _context.Movie.ToListAsync();
+        }
+
+        private async Task LogTokenAndClaims() {
+            var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+            var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+            Debug.WriteLine($"API~: Identity token: {identityToken}");
+            foreach(var claim in User.Claims)
+            {
+                Debug.WriteLine($"API~: Claim type: {claim.Type} -- Claim value: {claim.Value}");
+            }
         }
 
         // GET: api/Movies/5

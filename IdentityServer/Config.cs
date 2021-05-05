@@ -32,10 +32,10 @@ namespace IdentityServer
                     AllowRememberConsent = false,
                     RedirectUris = new List<string>()
                     {
-                        "https://localhost:5002/signin-oidc"
+                        "https://localhost:44384/signin-oidc"
                     },
                     PostLogoutRedirectUris = new List<string>(){
-                        "https://localhost:5002/signout-callback-oidc"
+                        "https://localhost:44384/signout-callback-oidc"
                     },
                     ClientSecrets = {
                         new Secret("secret".Sha256())
@@ -45,7 +45,8 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Address,
                         IdentityServerConstants.StandardScopes.Email,
-                        "movieApi"
+                        "movieApi",
+                        "roles"
                     }
                 }
             };
@@ -64,7 +65,8 @@ namespace IdentityServer
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
                 new IdentityResources.Address(),
-                new IdentityResources.Email()
+                new IdentityResources.Email(),
+                new IdentityResource("roles", "Your Role(s)", new List<string>(){ "role" })
             };
         public static List<TestUser> TestUsers =>
             new List<TestUser>
