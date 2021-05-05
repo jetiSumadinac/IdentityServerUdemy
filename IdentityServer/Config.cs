@@ -48,6 +48,26 @@ namespace IdentityServer
                         "movieApi",
                         "roles"
                     }
+                },
+                new Client
+                {
+                    ClientId = "movies_external_client",
+                    ClientName = "Movies external client",
+                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    RequirePkce = false,
+                    AllowRememberConsent = false,
+                    ClientSecrets = {
+                        new Secret("secret".Sha256())
+                    },
+                    RedirectUris = { "sss" },
+                    AllowedScopes = new List<string>(){
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Address,
+                        IdentityServerConstants.StandardScopes.Email,
+                        "movieApi",
+                        "roles"
+                    }
                 }
             };
         public static IEnumerable<ApiScope> ApiScopes =>
