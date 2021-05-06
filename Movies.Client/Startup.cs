@@ -42,7 +42,7 @@ namespace Movies.Client
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
                 {
-                    options.Authority = "https://localhost:5005";
+                    options.Authority = "https://localhost:44380";
                     options.ClientId = "movies_mvc_client";
                     options.ClientSecret = "secret";
                     options.ResponseType = "code id_token";
@@ -70,13 +70,13 @@ namespace Movies.Client
             services.AddTransient<AuthenticationDelegatingHandler>();
             
             services.AddHttpClient("MovieAPIClient", client => {
-                client.BaseAddress = new Uri("https://localhost:5001");
+                client.BaseAddress = new Uri("https://localhost:44364");
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
             }).AddHttpMessageHandler<AuthenticationDelegatingHandler>();
             
             services.AddHttpClient("IDPClient", client => {
-                client.BaseAddress = new Uri("https://localhost:5005");
+                client.BaseAddress = new Uri("https://localhost:44380");
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add(HeaderNames.Accept, "appliecation/json");
             });

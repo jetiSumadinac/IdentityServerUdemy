@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Movies.API.Data;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Movies.API
 {
@@ -38,6 +39,7 @@ namespace Movies.API
             services.AddDbContext<MoviesAPIContext>(options =>
                     options.UseInMemoryDatabase("Movies"));
             //options.UseSqlServer(Configuration.GetConnectionString("MoviesAPIContext")));
+            /*
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
@@ -47,6 +49,24 @@ namespace Movies.API
                         ValidateAudience = false
                     };
                 });
+            */
+
+
+            services
+               .AddAuthentication(options =>
+               {
+                   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+               })
+               .AddIdentityServerAuthentication(options =>
+               {
+                   options.Authority = "https://localhost:44380";
+                   options.RequireHttpsMetadata = false;
+
+                   options.ApiName = "movieApi";
+                   options.ApiSecret = "secret";
+               });
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("ClientIdPolicy", policy => policy.RequireClaim("client_id", "movieClient", "movies_mvc_client"));
