@@ -32,6 +32,7 @@ namespace Movies.API.Controllers
         public async Task<ActionResult<IEnumerable<Movie>>> GetMovie()
         {
             var rrr = User.Claims;
+            await HttpContext.AuthenticateAsync("Bearer");
             await LogTokenAndClaims();
             return await _context.Movie.ToListAsync();
         }

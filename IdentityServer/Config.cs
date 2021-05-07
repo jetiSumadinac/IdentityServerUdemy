@@ -32,10 +32,10 @@ namespace IdentityServer
                     AllowRememberConsent = false,
                     RedirectUris = new List<string>()
                     {
-                        "https://localhost:5002/signin-oidc"
+                        "https://localhost:44384/signin-oidc"
                     },
                     PostLogoutRedirectUris = new List<string>(){
-                        "https://localhost:5002/signout-callback-oidc"
+                        "https://localhost:44384/signout-callback-oidc"
                     },
                     ClientSecrets = {
                         new Secret("secret".Sha256())
@@ -102,9 +102,9 @@ namespace IdentityServer
                     Name = "apiResource",
                     Description = "Web API resource",
                     Scopes = { "movieApi" },
-                    //ApiSecrets= new List<Secret>{ 
-                    //    new Secret("secret", "Movies.Api resource secret")
-                    //},
+                    ApiSecrets= new List<Secret>{
+                        new Secret("secret", "Movies.Api resource secret")
+                    },
                     UserClaims = new List<string>{ JwtClaimTypes.Role }
                 }
             };

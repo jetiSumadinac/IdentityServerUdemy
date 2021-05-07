@@ -49,22 +49,51 @@ namespace Movies.API
             services.AddAuthentication(
                 options =>
                 {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    //options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    //options.DefaultAuthenticateScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
                 })
-                .AddJwtBearer(options =>
-                {
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddOpenIdConnect(options => {
                     options.Authority = "https://localhost:5005";
+                    options.ClientId = "apiResource";
+                    //options.ClientSecret = "secret";
+                    //options.ResponseType = "code";
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        //ValidateAudience = false,
                         NameClaimType = JwtClaimTypes.GivenName,
                         RoleClaimType = JwtClaimTypes.Role,
+                        ValidTypes = new[] { "at+jwt" }
                     };
-                    options.Audience = "apiResource";
-                    options.MapInboundClaims = true;
+                    options.SignInScheme = OpenIdConnectDefaults.AuthenticationScheme;
                 });
+            //.AddJwtBearer(options =>
+            //{
+            //    options.Authority = "https://localhost:5005";
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        NameClaimType = JwtClaimTypes.GivenName,
+            //        RoleClaimType = JwtClaimTypes.Role,
+            //        ValidTypes = new[] { "at+jwt"}
+            //    };
+            //    options.Audience = "apiResource";
+            //    options.MapInboundClaims = true;
+            //});
+
+            /*
+             Http request example
+                POST: https://localhost:5005/connect/token
+                grant_type:password
+                scope:movieApi openid profile address email roles
+                client_id:movies_external_client
+                client_secret:secret
+                username:bob
+                password:bob
+                claims:roles
+             */
 
             services.AddAuthorization(options =>
             {
@@ -88,7 +117,7 @@ namespace Movies.API
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
