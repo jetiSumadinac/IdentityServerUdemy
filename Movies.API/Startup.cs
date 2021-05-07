@@ -15,6 +15,12 @@ using Microsoft.EntityFrameworkCore;
 using Movies.API.Data;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using IdentityModel;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Net.Http;
 
 namespace Movies.API
 {
@@ -39,37 +45,30 @@ namespace Movies.API
             services.AddDbContext<MoviesAPIContext>(options =>
                     options.UseInMemoryDatabase("Movies"));
             //options.UseSqlServer(Configuration.GetConnectionString("MoviesAPIContext")));
-            /*
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
+
+            services.AddAuthentication(
+                options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                })
+                .AddJwtBearer(options =>
                 {
                     options.Authority = "https://localhost:5005";
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateAudience = false
+                        //ValidateAudience = false,
+                        NameClaimType = JwtClaimTypes.GivenName,
+                        RoleClaimType = JwtClaimTypes.Role,
                     };
+                    options.Audience = "apiResource";
+                    options.MapInboundClaims = true;
                 });
-            */
-
-
-            services
-               .AddAuthentication(options =>
-               {
-                   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-               })
-               .AddIdentityServerAuthentication(options =>
-               {
-                   options.Authority = "https://localhost:44380";
-                   options.RequireHttpsMetadata = false;
-
-                   options.ApiName = "movieApi";
-                   options.ApiSecret = "secret";
-               });
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("ClientIdPolicy", policy => policy.RequireClaim("client_id", "movieClient", "movies_mvc_client"));
+                options.AddPolicy("ClientIdPolicy", policy => policy.RequireClaim("client_id",  "movieClient", "movies_mvc_client", "movies_external_client"));
             });
         }
 

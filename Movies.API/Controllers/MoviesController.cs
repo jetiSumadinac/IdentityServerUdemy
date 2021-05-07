@@ -16,7 +16,8 @@ namespace Movies.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize("ClientIdPolicy")]
+    //[Authorize("ClientIdPolicy")]
+    [Authorize]
     public class MoviesController : ControllerBase
     {
         private readonly MoviesAPIContext _context;
@@ -35,6 +36,14 @@ namespace Movies.API.Controllers
             return await _context.Movie.ToListAsync();
         }
 
+        // GET: api/Movies/adminOnly
+        [HttpGet("adminOnly")]
+        [Authorize(Roles ="admin")]
+        public async Task<ActionResult<string>> AdminOnly() {
+
+            return "yes, you are admin";
+        }
+
         private async Task LogTokenAndClaims() {
             var identityToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
             var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
@@ -43,6 +52,7 @@ namespace Movies.API.Controllers
             {
                 Debug.WriteLine($"API~: Claim type: {claim.Type} -- Claim value: {claim.Value}");
             }
+            
         }
 
         // GET: api/Movies/5

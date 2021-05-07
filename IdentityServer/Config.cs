@@ -53,13 +53,12 @@ namespace IdentityServer
                 {
                     ClientId = "movies_external_client",
                     ClientName = "Movies external client",
-                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     RequirePkce = false,
                     AllowRememberConsent = false,
                     ClientSecrets = {
                         new Secret("secret".Sha256())
                     },
-                    RedirectUris = { "sss" },
                     AllowedScopes = new List<string>(){
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
@@ -67,7 +66,28 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.Email,
                         "movieApi",
                         "roles"
-                    }
+                    },
+                    AlwaysSendClientClaims = true
+                },
+                new Client
+                {
+                    ClientId = "apiResource.client",
+                    ClientName = "Movies API client",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    RequirePkce = false,
+                    AllowRememberConsent = false,
+                    ClientSecrets = {
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedScopes = new List<string>(){
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Address,
+                        IdentityServerConstants.StandardScopes.Email,
+                        "movieApi",
+                        "roles"
+                    },
+                    AlwaysSendClientClaims = true
                 }
             };
         public static IEnumerable<ApiScope> ApiScopes =>
@@ -79,9 +99,13 @@ namespace IdentityServer
             new List<ApiResource>
             {
                 new ApiResource{ 
-                Name = "movieApi",
-                Description = "Web API resource",
-                Scopes = { "movieApi" }
+                    Name = "apiResource",
+                    Description = "Web API resource",
+                    Scopes = { "movieApi" },
+                    //ApiSecrets= new List<Secret>{ 
+                    //    new Secret("secret", "Movies.Api resource secret")
+                    //},
+                    UserClaims = new List<string>{ JwtClaimTypes.Role }
                 }
             };
         public static IEnumerable<IdentityResource> IdentityResources =>
