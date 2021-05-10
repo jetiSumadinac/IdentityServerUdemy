@@ -49,39 +49,25 @@ namespace Movies.API
             services.AddAuthentication(
                 options =>
                 {
-                    //options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                    //options.DefaultAuthenticateScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-
+                    //JwtBearer config
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 })
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddOpenIdConnect(options => {
+                .AddJwtBearer(options =>
+                {
                     options.Authority = "https://localhost:5005";
-                    options.ClientId = "apiResource";
-                    //options.ClientSecret = "secret";
-                    //options.ResponseType = "code";
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        NameClaimType = JwtClaimTypes.GivenName,
-                        RoleClaimType = JwtClaimTypes.Role,
-                        ValidTypes = new[] { "at+jwt" }
+                        //NameClaimType = JwtClaimTypes.GivenName,
+                        //RoleClaimType = JwtClaimTypes.Role,
+                        RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+                        NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
+                        ValidTypes = new[] { "at+jwt" },
+                        ValidateAudience = true
                     };
-                    options.SignInScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    options.Audience = "apiResource";
+                    options.MapInboundClaims = true;
                 });
-            //.AddJwtBearer(options =>
-            //{
-            //    options.Authority = "https://localhost:5005";
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        NameClaimType = JwtClaimTypes.GivenName,
-            //        RoleClaimType = JwtClaimTypes.Role,
-            //        ValidTypes = new[] { "at+jwt"}
-            //    };
-            //    options.Audience = "apiResource";
-            //    options.MapInboundClaims = true;
-            //});
 
             /*
              Http request example

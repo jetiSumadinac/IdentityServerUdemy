@@ -105,7 +105,19 @@ namespace IdentityServer
                     ApiSecrets= new List<Secret>{
                         new Secret("secret", "Movies.Api resource secret")
                     },
-                    UserClaims = new List<string>{ JwtClaimTypes.Role }
+                    UserClaims = new List<string>{ 
+                        JwtClaimTypes.Role, 
+                        JwtClaimTypes.Address,
+                        JwtClaimTypes.Gender,
+                        JwtClaimTypes.BirthDate,
+                        JwtClaimTypes.Name,
+                        JwtClaimTypes.GivenName,
+                        JwtClaimTypes.FamilyName,
+                        JwtClaimTypes.Email, 
+                        JwtClaimTypes.WebSite,
+                        
+                    },
+                    
                 }
             };
         public static IEnumerable<IdentityResource> IdentityResources =>
